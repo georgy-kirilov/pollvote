@@ -6,4 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Development\Trash\pollvote\DemoServer\DemoServer\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\Development\Trash\pollvote\DemoServer\DemoServer\.editorconfig" />
+  </ItemGroup>
+
 </Project>
