@@ -14,4 +14,8 @@
     <None Include="D:\Development\Trash\pollvote\DemoServer\DemoServer\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+  </ItemGroup>
+
 </Project>
