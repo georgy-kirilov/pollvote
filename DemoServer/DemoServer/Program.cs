@@ -1,3 +1,5 @@
+using System.Text;
+
 using DemoServer.Data;
 
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,7 @@ var connectionString = $"Host={databaseUri.Host};Port={databaseUri.Port};Databas
 
 builder.Services.AddDbContext<StudentsDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddControllers();
+
 var app = builder.Build();
 
 app.MapGet("/", (int a, string b) =>
@@ -30,7 +33,12 @@ app.MapGet("/html", (string title) =>
 
 app.MapGet("/students", async (StudentsDbContext db) =>
 {
-    return await db.Students.ToListAsync();
+    var builder = new StringBuilder("<ol>");
+    (await db.Students.ToListAsync())
+        .ForEach(x => AppendStudent(builder, x));
+    builder.AppendLine("</ol>");
+
+    return Results.Content(builder.ToString(), "text/html");
 });
 
 app.MapGet("/create-student", () =>
@@ -49,6 +57,12 @@ app.MapControllers();
 
 app.Run();
 
+
+static void AppendStudent(StringBuilder builder, Student student)
+{
+    builder.AppendLine($"<li>{student.FirstName} {student.LastName} <form method=\"post\" action=\"/delete-student?id={student.Id}\"><input type=\"submit\" value=\"Delete\"></form></li>");
+}
+
 public class StudentsController : Controller
 {
     private readonly StudentsDbContext _dbContext;
@@ -64,6 +78,13 @@ public class StudentsController : Controller
         _dbContext.Students.Add(student);
         _dbContext.SaveChanges();
 
+        return Redirect("/students");
+    }
+
+    [HttpPost("/delete-student")]
+    public IActionResult DeleteStudent(int id)
+    {
+        _dbContext.Students.Where(s => s.Id == id).ExecuteDelete();
         return Redirect("/students");
     }
 }
