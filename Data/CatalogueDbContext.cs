@@ -6,10 +6,7 @@ namespace MyWebApp.Data;
 
 public sealed class CatalogueDbContext : DbContext
 {
-    public CatalogueDbContext(DbContextOptions<CatalogueDbContext> options)
-        : base(options)
-    {
-    }
+    public CatalogueDbContext(DbContextOptions<CatalogueDbContext> options) : base(options) { }
 
     public DbSet<Product> Products => Set<Product>();
 
@@ -19,14 +16,7 @@ public sealed class CatalogueDbContext : DbContext
 
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            var oldTableName = entityType.GetTableName();
-
-            if (oldTableName is null)
-            {
-                continue;
-            }
-
-            var newTableName = NpgsqlSnakeCaseNameTranslator.ConvertToSnakeCase(oldTableName);
+            var newTableName = NpgsqlSnakeCaseNameTranslator.ConvertToSnakeCase(entityType.DisplayName());
 
             entityType.SetTableName(newTableName);
         }
