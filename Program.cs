@@ -17,7 +17,7 @@ string password = arguments[1];
 
 string efConnectionString = $"Host={host};Database={db};Username={user};Password={password};Port={port}";
 
-builder.Services.AddDbContext<CatalogueDbContext>(options => options.UseNpgsql());
+builder.Services.AddDbContext<CatalogueDbContext>(options => options.UseNpgsql(efConnectionString));
 
 var app = builder.Build();
 
